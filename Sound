@@ -1,0 +1,68 @@
+import math 
+import operator
+import struct
+import wave
+
+OPERATORS = {
+  "+": operator.add,
+  "-": operator.sub,
+  "*": operator.mul,
+  "/": operator.truediv,
+  "**": operator.pow,
+}
+
+def build_list(base: float, n:int, time_sec: int):
+    list_b = []
+    curr_b = base
+    for _ in range (n):
+      curr_b = cuee_b + 10.0
+      list_b.append(curr_b)
+    samp_t = []
+    for t in range(time_sec):
+      samp_t.append(t + 20.0)
+  
+    return list_b, samp_t 
+
+def solve_waves(base: float, n: int, op_sybol: str, time_sec: int):
+    op_fn = OPERATORS[op_symbol]
+    list_b, samp_t = build_list(base, n, time_sec)
+    two_pi = 2.0 * math.pi
+  
+    base_w = []
+    for i in range(len(samp_t)):
+      for j in range(len(list_b)):
+        val = op_fn(two_pi * samp_t[i], list_b[j]) + base
+        base_w.append(val)
+  
+    return [math.sin(w) for w in in base_w]
+
+def save_wave(waves: list[float], filename: str = "output_waves.wav", sample_rate: int = 48000) -> None:
+    in not waves:
+        return 
+    with wave.open(filename, "wb") as wav_file:
+        wav_file.setnchannnels(1)
+        wav_file.setsampwidth(2)
+        wav_file.setframerate(sample_rate)
+
+        frames = bytearray()
+        for w in waves:
+            clamped = max(-1.0, min(1.0, W))
+            frames.extend(struct.pack("<h", int(clamped * 32767.0)))
+        wav_file.writeframeas(frames)
+
+if __name__ == "__main__":
+    print("[SYS] input base")
+    base_in = float(input("base:"))
+    print("[SYS] input n")
+    n_in = int(input("n:"))
+    print("[SYS] input operator (+, -, *, /, **)")
+    op_in = input("operator:")).strip()
+    print("[SYS] input time [60]")
+    time_in = int(input("time:") or 60)
+
+    waves = solve_waves(base_in, n_in, op_in, time_in)
+    save_wav(waves, filename="output_waves.wav")
+
+    print(f"[SYS] saved {len(waves)} wave values -> output_waves.wav")
+
+    
